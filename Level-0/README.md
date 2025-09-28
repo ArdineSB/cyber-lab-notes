@@ -1,68 +1,131 @@
-# Level-0 – TCP 3-Way Handshake (nmap + Wireshark)
+# Level 0 – TCP 3-Way Handshake (step-by-step for absolute beginners)
 
 **Date**  : 29 September 2025  
-**Lab**   : Home-lab (VirtualBox - Host-only network)  
+**Lab**   : Home-lab (VirtualBox – NO cable needed)  
 **Attacker** : Parrot OS VM (192.168.56.101)  
 **Target**  : Metasploitable 2 VM (192.168.56.102)
 
-## 1. Objective
-Perform a basic port-scan and capture the TCP three-way handshake (SYN → SYN-ACK → ACK) using **nmap** and **Wireshark**.
+---
 
-## 2. Tools Used
-- **nmap** – port scanner  
-- **Wireshark** – packet analyser  
-- **VirtualBox** – hypervisor  
-- **Parrot OS** – attacker machine  
-- **Metasploitable 2** – vulnerable target
-
-## 3. Network Setup
-- **Adapter type** : Host-only (Network settings on VirtualBox)
-- **Attacker IP** : 192.168.56.101  
-- **Target IP**  : 192.168.56.102  
-- **Connection test** : `ping 192.168.56.102` replied successfully.
-
-## 4. Commands Executed
-```bash
-# 1. Discover open ports
-nmap 192.168.56.102
-
-# 2. Capture packets (Wireshark filter = tcp)
-# 3. Screenshot the SYN → SYN-ACK → ACK sequence
-```
-
-## 5. Scan Results
-| Port | Service | State |
-|------|---------|-------|
-| 21   | ftp     | open  |
-| 22   | ssh     | open  |
-| 23   | telnet  | open  |
-| 80   | http    | open  |
-| 111  | rpcbind | open  |
-| 445  | smb     | open  |
-| 3306 | mysql   | open  |
-| Many More| Details Below |
-
-Full text output → [`level0-nmap.txt`](level0-nmap.txt)
-
-## 6. Evidence of 3-Way Handshake
-**Screenshot** : [`syn-handshake.png`](syn-handshake.png)  
-**Raw capture** : [`level0.pcapng`](level0.pcapng) *(open in Wireshark → filter: tcp)*
-
-Captured sequence:
-```
-No.  Time        Source           Destination      Protocol Info
-6    68.95       192.168.56.101   192.168.56.102   TCP      33698 → 443 [SYN]
-7    68.95       192.168.56.102   192.168.56.101   TCP      80 → 50610 [SYN, ACK]
-8    68.95       192.168.56.101   192.168.56.102   TCP      50610 → 80 [ACK]
-```
-
-## 7. What I Learned
-- Host-only network keeps traffic inside the laptop (safe & legal).  
-- Every TCP connection begins with SYN → SYN-ACK → ACK.  
-- Wireshark filter `tcp` quickly shows only connection packets.
-
-## 8. Next Step
-Continue to **Level 1** – build a firewall + IDS with **pfSense** and **Suricata**.
+## A. What you will do (big picture)
+1. Install two virtual computers inside your laptop.  
+2. Make them talk to each other without internet.  
+3. Scan one computer with **nmap**.  
+4. Watch the first “hand-shake” of every TCP connection in **Wireshark**.  
+5. Save the proof → upload to GitHub → show off.
 
 ---
-*Back to [root README](../README.md)*
+
+## B. Prepare your Windows host (10 minutes)
+1. Download & install **VirtualBox** (next-next finish).  
+2. Download:
+   - Parrot OS ISO (≈ 2 GB)  
+   - Metasploitable 2 zip (≈ 800 MB) – extract → you get `Metasploitable.vmdk`  
+3. Create a folder `D:\Labs\` (any drive) to keep files tidy.
+
+---
+
+## C. Build a “private street” inside your laptop
+VirtualBox → File → Preferences → Network → Host-Only → **+** (add).  
+Leave everything default → OK.  
+Now you have a private road named `192.168.56.x` that only VMs can use.
+
+---
+
+## D. Create the TARGET (Metasploitable)
+VirtualBox → New:
+- Name: `Metasploitable`  
+- Type: Linux → Ubuntu 64-bit  
+- RAM: **512 MB** (lightweight)  
+- Hard-disk: **Use existing** → choose `Metasploitable.vmdk`  
+Settings → Network → Adapter 1 → **Host-Only** → OK.
+
+---
+
+## E. Create the ATTACKER (Parrot OS)
+VirtualBox → New:
+- Name: `ParrotOS`  
+- Type: Linux → Ubuntu 64-bit  
+- RAM: **4096 MB** (4 GB)  
+- Hard-disk: **Create new** → 20 GB, VDI, **Dynamically allocated**  
+Settings → Storage → Empty → choose Parrot ISO  
+Settings → Network → Adapter 1 → **Host-Only** → OK.
+
+Start Parrot VM → install (choose language, username, password) → reboot → login.
+
+---
+
+## F. Check IP addresses (both VMs)
+Metasploitable login: `msfadmin` / `msfadmin`  
+Type:  
+```
+ifconfig
+```  
+Look for `inet addr:192.168.56.???` (example `192.168.56.102`)  
+
+Parrot OS open terminal:  
+```
+ip a
+```  
+You should see `192.168.56.101`  
+
+Test “can they talk?”  
+In Parrot:
+```
+ping 192.168.56.102
+```
+Stop with `Ctrl+C` when you see replies.
+
+---
+
+## G. Run nmap (port scanner)
+Still in Parrot terminal:
+```
+nmap 192.168.56.102
+```
+Wait → you will see a list of open ports.  
+Save the result:
+```
+nmap 192.168.56.102 > level0-nmap.txt
+```
+
+---
+
+## H. Capture the 3-way handshake with Wireshark
+1. Open Wireshark (Applications → Sniffing & Spoofing → Wireshark).  
+2. Click the green **▶** on interface `enp0s3` → starts capturing.  
+3. **While capture is running**, open a **new terminal** and repeat:
+   ```
+   nmap 192.168.56.102
+   ```
+4. Back to Wireshark → click red **■** to stop.  
+5. Type `tcp` in the display filter box → press Enter.  
+6. Find **three packets in a row** that show:  
+   ```
+   [SYN]  →  [SYN, ACK]  →  [ACK]
+   ```
+7. Screenshot that part → save as `syn-handshake.png`.  
+8. Save the whole capture: File → Save As → `level0.pcapng`.
+
+---
+
+## I. Evidence files
+| Evidence | File |
+|----------|------|
+| nmap result | [`level0-nmap.txt`](level0-nmap.txt) |
+| handshake screenshot | [`syn-handshake.png`](syn-handshake.png) |
+| raw capture | [`level0.pcapng`](level0.pcapng) |
+
+---
+
+## J. What I learned
+- I can build a mini-network inside my laptop without extra hardware.  
+- Every TCP connection starts with a “hello” sequence (3-way handshake).  
+- I can save proof of my work and put it on GitHub for portfolio.
+
+---
+
+## K. Next
+Level 1 – Build a firewall + IDS with **pfSense** and **Suricata**.
+
+Back to [root README](../README.md)
