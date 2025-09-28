@@ -6,7 +6,7 @@
 ## Progress Tracker
 | Level | Topic | Status |
 |-------|-------|--------|
-| 0 | TCP 3-Way Handshake (nmap + Wireshark) | ✅ Done | (./Level-0/README.md)
+| 0 | TCP 3-Way Handshake (nmap + Wireshark) | ✅ Done (./Level-0/README.md)| 
 | 1 | Network Defense (pfSense + Suricata IDS) | 🔄 On-going |
 | 2 | WebApp Pentest (DVWA + Burp) | ⏳ Planned |
 | 3 | SIEM & Blue-Team (Wazuh) | ⏳ Planned |
