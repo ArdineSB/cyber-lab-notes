@@ -40,6 +40,7 @@ nmap 192.168.56.102
 | 111  | rpcbind | open  |
 | 445  | smb     | open  |
 | 3306 | mysql   | open  |
+| Many More| Details Below |
 
 Full text output → [`level0-nmap.txt`](level0-nmap.txt)
 
@@ -47,10 +48,10 @@ Full text output → [`level0-nmap.txt`](level0-nmap.txt)
 **Screenshot** : [`syn-handshake.png`](syn-handshake.png)  
 **Raw capture** : [`level0.pcapng`](level0.pcapng) *(open in Wireshark → filter: tcp)*
 
-Captured sequence (example):
+Captured sequence:
 ```
 No.  Time        Source           Destination      Protocol Info
-5    68.95       192.168.56.101   192.168.56.102   TCP      50610 → 80 [SYN]
+6    68.95       192.168.56.101   192.168.56.102   TCP      33698 → 443 [SYN]
 7    68.95       192.168.56.102   192.168.56.101   TCP      80 → 50610 [SYN, ACK]
 8    68.95       192.168.56.101   192.168.56.102   TCP      50610 → 80 [ACK]
 ```
