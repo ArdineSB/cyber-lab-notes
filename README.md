@@ -4,14 +4,14 @@
 ---
 
 ## Progress Tracker
-| Level | Topic | Status |
-|-------|-------|--------|
-| 0 | TCP 3-Way Handshake (nmap + Wireshark) | ✅ [Done](./Level-0/README.md)| 
-| 1 | Network Defense (pfSense + Suricata IDS) | 🔄 On-going |
-| 2 | WebApp Pentest (DVWA + Burp) | ⏳ Planned |
-| 3 | SIEM & Blue-Team (Wazuh) | ⏳ Planned |
-| 4 | Malware Analysis (REMnux + Cuckoo) | ⏳ Planned |
-| 5 | Cloud Security (AWS free-tier hardening) | ⏳ Planned |
+| Level | Topic | Status | Details |
+|-------|-------|--------|---------|
+| 0 | TCP 3-Way Handshake (nmap + Wireshark) | ✅ Done | [Read Here](./Level-0/README.md) | 
+| 1 | Network Defense (pfSense + Suricata IDS) | 🔄 On-going | |
+| 2 | WebApp Pentest (DVWA + Burp) | ⏳ Planned | |
+| 3 | SIEM & Blue-Team (Wazuh) | ⏳ Planned | |
+| 4 | Malware Analysis (REMnux + Cuckoo) | ⏳ Planned | |
+| 5 | Cloud Security (AWS free-tier hardening) | ⏳ Planned | |
 
 ---
 
